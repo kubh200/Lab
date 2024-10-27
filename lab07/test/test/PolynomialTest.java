@@ -49,25 +49,45 @@ public class PolynomialTest {
    */
   @Test (expected = IllegalArgumentException.class)
   public void testAddDifferentType() {
-      Polynomial poly1 = new PolynomialImpl("3x^2 +4x^1 -5");
+    Polynomial poly1 = new PolynomialImpl("3x^2 +4x^1 -5");
       
-      Polynomial differentPoly = new Polynomial() {
-          @Override
-          public Polynomial add(Polynomial other) { return null; }
-          @Override
-          public void addTerm(int coefficient, int power) { }
-          @Override
-          public boolean isSame(Polynomial poly) { return false; }
-          @Override
-          public double evaluate(double x) { return 0; }
-          @Override
-          public int getCoefficient(int power) { return 0; }
-          @Override
-          public int getDegree() { return 0; }
-          @Override
-          public String toString() { return "Dummy"; }
-      };
-      poly1.add(differentPoly);
+    Polynomial differentPoly = new Polynomial() {
+      @Override
+      public Polynomial add(Polynomial other) { 
+        return null; 
+      }
+      
+      @Override
+      public void addTerm(int coefficient, int power) {
+
+      }
+      
+      @Override
+      public boolean isSame(Polynomial poly) { 
+        return false; 
+      }
+      
+      @Override
+      public double evaluate(double x) { 
+        return 0; 
+      }
+      
+      @Override
+      public int getCoefficient(int power) { 
+        return 0; 
+      }
+      
+      @Override
+      public int getDegree() {
+        return 0; 
+      }
+      
+      @Override
+      public String toString() { 
+        return "Dummy"; 
+      }
+    };
+    poly1.add(differentPoly);
   }
   
   /**
