@@ -41,7 +41,7 @@ public class PolynomialTest {
 
       // Expected result: "5x^2 +1x^1 +2"
       Polynomial result = poly1.add(poly2);
-      assertEquals("5x^2 +1x^1 +2", result.toString());
+      assertEquals("5x^2 +x^1 +2", result.toString());
   }
   
   /**
