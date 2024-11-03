@@ -50,7 +50,7 @@ public class BinarySearchTreeImpl<T extends Comparable<T>> implements BinarySear
 
   private int heightRecursive(Node node) {
     if (node == null) {
-      return -1;
+      return 0;
     }
     int leftHeight = heightRecursive(node.left);
     int rightHeight = heightRecursive(node.right);
@@ -101,17 +101,67 @@ public class BinarySearchTreeImpl<T extends Comparable<T>> implements BinarySear
 
   @Override
   public String preOrder() {
-    return null;
+      StringBuilder sb = new StringBuilder();
+      sb.append("["); 
+      preOrderRecursive(root, sb);
+      if (sb.length() > 1) {
+          sb.setLength(sb.length() - 1); 
+      }
+      sb.append("]"); 
+      return sb.toString();
+  }
+
+  private void preOrderRecursive(Node node, StringBuilder sb) {
+      if (node != null) {
+          sb.append(node.data).append(" ");
+          preOrderRecursive(node.left, sb);
+          preOrderRecursive(node.right, sb);
+      }
   }
 
   @Override
   public String inOrder() {
-    return null;
+      StringBuilder sb = new StringBuilder();
+      sb.append("["); 
+      inOrderRecursive(root, sb);
+      if (sb.length() > 1) {
+          sb.setLength(sb.length() - 1); 
+      }
+      sb.append("]");
+      return sb.toString();
+  }
+
+  private void inOrderRecursive(Node node, StringBuilder sb) {
+      if (node != null) {
+          inOrderRecursive(node.left, sb);
+          sb.append(node.data).append(" ");
+          inOrderRecursive(node.right, sb);
+      }
   }
 
   @Override
   public String postOrder() {
-    return null;
+      StringBuilder sb = new StringBuilder();
+      sb.append("["); 
+      postOrderRecursive(root, sb);
+      if (sb.length() > 1) {
+          sb.setLength(sb.length() - 1); 
+      }
+      sb.append("]"); 
+      return sb.toString();
+  }
+
+  private void postOrderRecursive(Node node, StringBuilder sb) {
+      if (node != null) {
+          postOrderRecursive(node.left, sb);
+          postOrderRecursive(node.right, sb);
+          sb.append(node.data).append(" ");
+      }
+  }
+  
+  @Override
+  public String toString() {
+      return inOrder();
   }
 
 }
