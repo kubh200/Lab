@@ -77,12 +77,26 @@ public class BinarySearchTreeImpl<T extends Comparable<T>> implements BinarySear
 
   @Override
   public T minimum() {
-    return null;
+    if (root == null) {
+      return null;
+    }
+    return minimumRecursive(root);
+  }
+
+  private T minimumRecursive(Node node) {
+    return (node.left == null) ? node.data : minimumRecursive(node.left);
   }
 
   @Override
   public T maximum() {
-    return null;
+    if (root == null) {
+      return null;
+    }
+    return maximumRecursive(root);
+  }
+
+  private T maximumRecursive(Node node) {
+    return (node.right == null) ? node.data : maximumRecursive(node.right);
   }
 
   @Override
