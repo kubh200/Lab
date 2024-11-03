@@ -59,7 +59,20 @@ public class BinarySearchTreeImpl<T extends Comparable<T>> implements BinarySear
 
   @Override
   public boolean present(T data) {
-    return false;
+    return presentRecursive(root, data);
+  }
+
+  private boolean presentRecursive(Node node, T data) {
+    if (node == null) {
+      return false;
+    }
+    if (data.compareTo(node.data) == 0) {
+      return true;
+    } else if (data.compareTo(node.data) < 0) {
+      return presentRecursive(node.left, data);
+    } else {
+      return presentRecursive(node.right, data);
+    }
   }
 
   @Override
