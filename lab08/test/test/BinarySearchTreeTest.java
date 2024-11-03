@@ -2,6 +2,7 @@ package test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
@@ -118,5 +119,74 @@ public class BinarySearchTreeTest {
       assertTrue("The minimum value 3 should be present in the tree", bst.present(3));
       assertTrue("The maximum value 18 should be present in the tree", bst.present(18));
     }
+    
+    @Test
+    public void testMinimumEmptyTree() {
+      assertNull("Minimum of an empty tree should be null", bst.minimum());
+    }
 
+    @Test
+    public void testMaximumEmptyTree() {
+      assertNull("Maximum of an empty tree should be null", bst.maximum());
+    }
+
+    @Test
+    public void testMinimumSingleElement() {
+      bst.add(10);
+      assertEquals("Minimum of a tree with one element should be that element", Integer.valueOf(10), bst.minimum());
+    }
+
+    @Test
+    public void testMaximumSingleElement() {
+      bst.add(10);
+      assertEquals("Maximum of a tree with one element should be that element", Integer.valueOf(10), bst.maximum());
+    }
+
+    @Test
+    public void testMinimumMultipleElements() {
+      bst.add(10);
+      bst.add(5);
+      bst.add(15);
+      bst.add(3);
+      bst.add(7);
+      bst.add(12);
+      bst.add(18);
+
+      assertEquals("Minimum of the tree should be 3", Integer.valueOf(3), bst.minimum());
+    }
+
+    @Test
+    public void testMaximumMultipleElements() {
+      bst.add(10);
+      bst.add(5);
+      bst.add(15);
+      bst.add(3);
+      bst.add(7);
+      bst.add(12);
+      bst.add(18);
+
+      assertEquals("Maximum of the tree should be 18", Integer.valueOf(18), bst.maximum());
+    }
+
+    @Test
+    public void testMinimumRightSkewedTree() {
+      bst.add(2);
+      bst.add(4);
+      bst.add(6);
+      bst.add(8);
+      bst.add(10);
+
+      assertEquals("Minimum of a right-skewed tree should be the first element added", Integer.valueOf(2), bst.minimum());
+    }
+
+    @Test
+    public void testMaximumLeftSkewedTree() {
+      bst.add(10);
+      bst.add(8);
+      bst.add(6);
+      bst.add(4);
+      bst.add(2);
+
+      assertEquals("Maximum of a left-skewed tree should be the first element added", Integer.valueOf(10), bst.maximum());
+    }
 }
