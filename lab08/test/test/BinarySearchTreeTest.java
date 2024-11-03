@@ -1,167 +1,305 @@
-package bst;
+package test;
 
-public class BinarySearchTreeImpl<T extends Comparable<T>> implements BinarySearchTree<T> {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-  private class Node {
-    T data;
-    Node left, right;
+import org.junit.Before;
+import org.junit.Test;
 
-    Node(T data) {
-      this.data = data;
-      left = right = null;
+import bst.BinarySearchTree;
+import bst.BinarySearchTreeImpl;
+
+public class BinarySearchTreeTest {
+
+	private BinarySearchTree<Integer> bst;
+
+    @Before
+    public void setUp() {
+        bst = new BinarySearchTreeImpl<>(); 
     }
-  }
 
-  private Node root; 
-  private int size;  
-
-  public BinarySearchTreeImpl() {
-    root = null;
-    size = 0;
-  }
-
-  @Override
-  public void add(T data) {
-    root = addRecursive(root, data);
-  }
-
-  private Node addRecursive(Node node, T data) {
-    if (node == null) {
-      size++;
-      return new Node(data);
+    @Test
+    public void testAddSingleElement() {
+        bst.add(10);
+        assertEquals("Size should be 1 after adding one element", 1, bst.size());
     }
-    if (data.compareTo(node.data) < 0) {
-      node.left = addRecursive(node.left, data);
-    } else if (data.compareTo(node.data) > 0) {
-      node.right = addRecursive(node.right, data);
+
+    @Test
+    public void testAddMultipleElements() {
+        bst.add(10);
+        bst.add(5);
+        bst.add(15);
+        bst.add(3);
+        bst.add(7);
+
+        assertEquals("Size should be 5 after adding five elements", 5, bst.size());
     }
-      return node;
-  }
-  
-  @Override
-  public int size() {
-    return size;
-  }
-
-  @Override
-  public int height() {
-    return heightRecursive(root);
-  }
-
-  private int heightRecursive(Node node) {
-    if (node == null) {
-      return 0;
+    
+    @Test
+    public void testHeightEmptyTree() {
+      assertEquals("Height of an empty tree should be 0", 0, bst.height());
     }
-    int leftHeight = heightRecursive(node.left);
-    int rightHeight = heightRecursive(node.right);
-    return Math.max(leftHeight, rightHeight) + 1;
-  }
 
-  @Override
-  public boolean present(T data) {
-    return presentRecursive(root, data);
-  }
-
-  private boolean presentRecursive(Node node, T data) {
-    if (node == null) {
-      return false;
+    @Test
+    public void testHeightSingleElement() {
+      bst.add(10);
+      assertEquals("Height of a tree with one element should be 1", 1, bst.height());
     }
-    if (data.compareTo(node.data) == 0) {
-      return true;
-    } else if (data.compareTo(node.data) < 0) {
-      return presentRecursive(node.left, data);
-    } else {
-      return presentRecursive(node.right, data);
+    
+    @Test
+    public void testHeightMutiple() {
+      bst.add(3);
+      bst.add(4);
+      bst.add(5);
+      assertEquals("Height of tree with 3 elements should be 3", 3, bst.height());
     }
-  }
 
-  @Override
-  public T minimum() {
-    if (root == null) {
-      return null;
+    @Test
+    public void testHeightLeftSkewedTree() {
+      bst.add(10);
+      bst.add(8);
+      bst.add(6);
+      bst.add(4);
+      bst.add(2);
+      assertEquals("Height of a left-skewed tree with 5 elements should be 5", 5, bst.height());
     }
-    return minimumRecursive(root);
-  }
-
-  private T minimumRecursive(Node node) {
-    return (node.left == null) ? node.data : minimumRecursive(node.left);
-  }
-
-  @Override
-  public T maximum() {
-    if (root == null) {
-      return null;
+    
+    @Test
+    public void testPresentInEmptyTree() {
+      assertFalse("The value should not be found in an empty tree", bst.present(10));
     }
-    return maximumRecursive(root);
-  }
 
-  private T maximumRecursive(Node node) {
-    return (node.right == null) ? node.data : maximumRecursive(node.right);
-  }
+    @Test
+    public void testPresentSingleElementFound() {
+      bst.add(10);
+      assertTrue("The value 10 should be present in the tree", bst.present(10));
+    }
 
-  @Override
-  public String preOrder() {
-      StringBuilder sb = new StringBuilder();
-      sb.append("["); 
-      preOrderRecursive(root, sb);
-      if (sb.length() > 1) {
-          sb.setLength(sb.length() - 1); 
-      }
-      sb.append("]"); 
-      return sb.toString();
-  }
+    @Test
+    public void testPresentSingleElementNotFound() {
+      bst.add(10);
+      assertFalse("The value 5 should not be present in the tree", bst.present(5));
+    }
 
-  private void preOrderRecursive(Node node, StringBuilder sb) {
-      if (node != null) {
-          sb.append(node.data).append(" ");
-          preOrderRecursive(node.left, sb);
-          preOrderRecursive(node.right, sb);
-      }
-  }
+    @Test
+    public void testPresentMultipleElementsFound() {
+      bst.add(10);
+      bst.add(5);
+      bst.add(15);
+      bst.add(3);
+      bst.add(7);
+      bst.add(12);
+      bst.add(18);
 
-  @Override
-  public String inOrder() {
-      StringBuilder sb = new StringBuilder();
-      sb.append("["); 
-      inOrderRecursive(root, sb);
-      if (sb.length() > 1) {
-          sb.setLength(sb.length() - 1); 
-      }
-      sb.append("]");
-      return sb.toString();
-  }
+      assertTrue("The value 5 should be present in the tree", bst.present(5));
+      assertTrue("The value 15 should be present in the tree", bst.present(15));
+      assertTrue("The value 3 should be present in the tree", bst.present(3));
+      assertTrue("The value 18 should be present in the tree", bst.present(18));
+    }
 
-  private void inOrderRecursive(Node node, StringBuilder sb) {
-      if (node != null) {
-          inOrderRecursive(node.left, sb);
-          sb.append(node.data).append(" ");
-          inOrderRecursive(node.right, sb);
-      }
-  }
+    @Test
+    public void testPresentMultipleElementsNotFound() {
+      bst.add(10);
+      bst.add(5);
+      bst.add(15);
+      bst.add(3);
+      bst.add(7);
+      bst.add(12);
+      bst.add(18);
 
-  @Override
-  public String postOrder() {
-      StringBuilder sb = new StringBuilder();
-      sb.append("["); 
-      postOrderRecursive(root, sb);
-      if (sb.length() > 1) {
-          sb.setLength(sb.length() - 1); 
-      }
-      sb.append("]"); 
-      return sb.toString();
-  }
+      assertFalse("The value 6 should not be present in the tree", bst.present(6));
+      assertFalse("The value 20 should not be present in the tree", bst.present(20));
+      assertFalse("The value 0 should not be present in the tree", bst.present(0));
+    }
 
-  private void postOrderRecursive(Node node, StringBuilder sb) {
-      if (node != null) {
-          postOrderRecursive(node.left, sb);
-          postOrderRecursive(node.right, sb);
-          sb.append(node.data).append(" ");
-      }
-  }
-  
-  @Override
-  public String toString() {
-      return inOrder();
-  }
+    @Test
+    public void testPresentEdgeValues() {
+      bst.add(10);
+      bst.add(5);
+      bst.add(15);
+      bst.add(3);
+      bst.add(7);
+      bst.add(12);
+      bst.add(18);
 
+      assertTrue("The minimum value 3 should be present in the tree", bst.present(3));
+      assertTrue("The maximum value 18 should be present in the tree", bst.present(18));
+    }
+    
+    @Test
+    public void testMinimumEmptyTree() {
+      assertNull("Minimum of an empty tree should be null", bst.minimum());
+    }
+
+    @Test
+    public void testMaximumEmptyTree() {
+      assertNull("Maximum of an empty tree should be null", bst.maximum());
+    }
+
+    @Test
+    public void testMinimumSingleElement() {
+      bst.add(10);
+      assertEquals("Minimum of a tree with one element should be that element", Integer.valueOf(10), bst.minimum());
+    }
+
+    @Test
+    public void testMaximumSingleElement() {
+      bst.add(10);
+      assertEquals("Maximum of a tree with one element should be that element", Integer.valueOf(10), bst.maximum());
+    }
+
+    @Test
+    public void testMinimumMultipleElements() {
+      bst.add(10);
+      bst.add(5);
+      bst.add(15);
+      bst.add(3);
+      bst.add(7);
+      bst.add(12);
+      bst.add(18);
+
+      assertEquals("Minimum of the tree should be 3", Integer.valueOf(3), bst.minimum());
+    }
+
+    @Test
+    public void testMaximumMultipleElements() {
+      bst.add(10);
+      bst.add(5);
+      bst.add(15);
+      bst.add(3);
+      bst.add(7);
+      bst.add(12);
+      bst.add(18);
+
+      assertEquals("Maximum of the tree should be 18", Integer.valueOf(18), bst.maximum());
+    }
+
+    @Test
+    public void testMinimumRightSkewedTree() {
+      bst.add(2);
+      bst.add(4);
+      bst.add(6);
+      bst.add(8);
+      bst.add(10);
+
+      assertEquals("Minimum of a right-skewed tree should be the first element added", Integer.valueOf(2), bst.minimum());
+    }
+
+    @Test
+    public void testMaximumLeftSkewedTree() {
+      bst.add(10);
+      bst.add(8);
+      bst.add(6);
+      bst.add(4);
+      bst.add(2);
+
+      assertEquals("Maximum of a left-skewed tree should be the first element added", Integer.valueOf(10), bst.maximum());
+    }
+    
+    @Test
+    public void testPreOrderEmptyTree() {
+      assertEquals("Pre-order traversal of an empty tree should be an empty string", "[]", bst.preOrder());
+    }
+    
+    @Test
+    public void testPreOrderSingleElement() {
+      bst.add(10);
+      assertEquals("Pre-order traversal of a tree with one element should be '10'", "[10]", bst.preOrder());
+    }
+    
+    @Test
+    public void testPreOrderMultipleElements() {
+      bst.add(10);
+      bst.add(5);
+      bst.add(15);
+      bst.add(3);
+      bst.add(7);
+      bst.add(12);
+      bst.add(18);
+
+      assertEquals("Pre-order traversal should be '10 5 3 7 15 12 18'", "[10 5 3 7 15 12 18]", bst.preOrder());
+    }
+    
+    @Test
+    public void testPreOrderSkewedTree() {
+      bst.add(1);
+      bst.add(2);
+      bst.add(3);
+      bst.add(4);
+      bst.add(5);
+
+      assertEquals("Pre-order traversal of a right-skewed tree should be '1 2 3 4 5'", "[1 2 3 4 5]", bst.preOrder());
+    }
+    
+    @Test
+    public void testInOrderEmptyTree() {
+      assertEquals("In-order traversal of an empty tree should be an empty string", "[]", bst.inOrder());
+    }
+    
+    @Test
+    public void testInOrderSingleElement() {
+      bst.add(10);
+      assertEquals("In-order traversal of a tree with one element should be '10'", "[10]", bst.inOrder());
+    }
+    
+    @Test
+    public void testInOrderMultipleElements() {
+      bst.add(10);
+      bst.add(5);
+      bst.add(15);
+      bst.add(3);
+      bst.add(7);
+      bst.add(12);
+      bst.add(18);
+
+      assertEquals("In-order traversal should be '3 5 7 10 12 15 18'", "[3 5 7 10 12 15 18]", bst.inOrder());
+    }
+    
+    @Test
+    public void testInOrderSkewedTree() {
+      bst.add(1);
+      bst.add(2);
+      bst.add(3);
+      bst.add(4);
+      bst.add(5);
+
+      assertEquals("In-order traversal of a right-skewed tree should be '1 2 3 4 5'", "[1 2 3 4 5]", bst.inOrder());
+    }
+    
+    @Test
+    public void testPostOrderEmptyTree() {
+      assertEquals("Post-order traversal of an empty tree should be an empty string", "[]", bst.postOrder());
+    }
+    
+    @Test
+    public void testPostOrderSingleElement() {
+      bst.add(10);
+      assertEquals("Post-order traversal of a tree with one element should be '10'", "[10]", bst.postOrder());
+    }
+    
+    @Test
+    public void testPostOrderMultipleElements() {
+      bst.add(10);
+      bst.add(5);
+      bst.add(15);
+      bst.add(3);
+      bst.add(7);
+      bst.add(12);
+      bst.add(18);
+
+      assertEquals("Post-order traversal should be '3 7 5 12 18 15 10'", "[3 7 5 12 18 15 10]", bst.postOrder());
+    }
+    
+    @Test
+    public void testPostOrderSkewedTree() {
+      bst.add(1);
+      bst.add(2);
+      bst.add(3);
+      bst.add(4);
+      bst.add(5);
+
+      assertEquals("Post-order traversal of a right-skewed tree should be '[5 4 3 2 1]'", "[5 4 3 2 1]", bst.postOrder());
+    }
 }
