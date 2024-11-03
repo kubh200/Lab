@@ -33,5 +33,26 @@ public class BinarySearchTreeTest {
 
         assertEquals("Size should be 5 after adding five elements", 5, bst.size());
     }
+    
+    @Test
+    public void testHeightEmptyTree() {
+      assertEquals("Height of an empty tree should be -1", -1, bst.height());
+    }
+
+    @Test
+    public void testHeightSingleElement() {
+      bst.add(10);
+      assertEquals("Height of a tree with one element should be 0", 0, bst.height());
+    }
+
+    @Test
+    public void testHeightLeftSkewedTree() {
+      bst.add(10);
+      bst.add(8);
+      bst.add(6);
+      bst.add(4);
+      bst.add(2);
+      assertEquals("Height of a left-skewed tree with 5 elements should be 4", 4, bst.height());
+    }
 
 }
