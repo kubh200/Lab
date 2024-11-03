@@ -45,7 +45,16 @@ public class BinarySearchTreeImpl<T extends Comparable<T>> implements BinarySear
 
   @Override
   public int height() {
-    return 0;
+    return heightRecursive(root);
+  }
+
+  private int heightRecursive(Node node) {
+    if (node == null) {
+      return -1;
+    }
+    int leftHeight = heightRecursive(node.left);
+    int rightHeight = heightRecursive(node.right);
+    return Math.max(leftHeight, rightHeight) + 1;
   }
 
   @Override
